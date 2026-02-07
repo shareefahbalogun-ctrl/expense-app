@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Spending Pattern</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="app.js" defer></script>
+  <script src="dashboard.js" defer></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #2196F3;
+    }
+
+    /* Down Dashboard Cards */
+    .down-dashboard {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 40px;
+    }
+
+    .down-card {
+      background: linear-gradient(145deg, #ffffff, #e6e9f0);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      padding: 20px;
+      flex: 1 1 200px;
+      max-width: 220px;
+      position: relative;
+      transition: transform 0.3s ease;
+      cursor: default;
+    }
+
+    .down-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .down-card svg {
+      display: block;
+      margin: 0 auto 10px;
+      stroke: #fff;
+    }
+
+    .down-card-label {
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .down-card-value {
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: #2196F3;
+      position: relative;
+    }
+
+    .down-card-value .badge {
+      font-size: 14px;
+      background-color: #FF6B6B;
+      color: #fff;
+      border-radius: 6px;
+      padding: 2px 6px;
+      margin-left: 5px;
+      vertical-align: middle;
+    }
+
+    .down-card-bar {
+      height: 6px;
+      background-color: #2196F3;
+      border-radius: 3px;
+      margin-top: 12px;
+      transition: width 0.6s ease;
+    }
+
+    .sparkline-container {
+      width: 100%;
+      height: 40px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .down-card:hover .sparkline-container {
+      display: block;
+    }
+
+    /* Stats Section */
+    .stats-compact {
+      display: flex;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: 15px;
+      overflow-x: auto;
+      margin-bottom: 30px;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .stats-card {
+      flex: 0 0 140px;
+      min-width: 120px;
+      font-weight: 500;
+      color: #333;
+      position: relative;
+      text-align: center;
+    }
+
+    .stats-card span {
+      font-weight: 700;
+      color: #FF6B6B;
+      display: block;
+      margin-top: 5px;
+      font-size: 18px;
+    }
+
+    /* Chart */
+    canvas#spendingChart {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      margin-bottom: 30px;
+      width: 100%;
+      max-width: 800px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      height: auto;
+    }
+
+    /* Insights */
+    #spendingInsights {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      max-width: 800px;
+      margin: 0 auto;
+      font-size: 15px;
+      color: #555;
+    }
+
+    #topCategoriesList {
+      margin-top: 10px;
+      list-style: none;
+      padding-left: 0;
+    }
+
+    #topCategoriesList li {
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 500;
+      padding: 4px 8px;
+      background-color: #f0f4f8;
+      border-radius: 6px;
+      position: relative;
+    }
+
+    #topCategoriesList li span.amount {
+      color: #FF6B6B;
+      font-weight: 700;
+    }
+
+    #topCategoriesList li .badge {
+      background-color: #4CAF50;
+      color: #fff;
+      border-radius: 4px;
+      padding: 2px 5px;
+      font-size: 12px;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Spending Pattern</h1>
+
+<!-- Down Dashboard -->
+<section id="downDashboard" class="down-dashboard">
+  <div class="down-card" data-type="balance">
+    <svg width="50" height="50"><circle cx="25" cy="25" r="20" stroke="#fff" stroke-width="3" fill="none"></circle></svg>
+    <div class="down-card-label">Balance</div>
+    <div class="down-card-value">₦0</div>
+    <div class="down-card-bar"></div>
+    <canvas class="sparkline-container"></canvas>
+  </div>
+  <div class="down-card" data-type="income">
+    <svg width="50" height="50"><circle cx="25" cy="25" r="20" stroke="#fff" stroke-width="3" fill="none"></circle></svg>
+    <div class="down-card-label">Income</div>
+    <div class="down-card-value">₦0</div>
+    <div class="down-card-bar"></div>
+    <canvas class="sparkline-container"></canvas>
+  </div>
+  <div class="down-card" data-type="expenses">
+    <svg width="50" height="50"><circle cx="25" cy="25" r="20" stroke="#fff" stroke-width="3" fill="none"></circle></svg>
+    <div class="down-card-label">Expenses</div>
+    <div class="down-card-value">₦0 <span class="badge">Alert</span></div>
+    <div class="down-card-bar"></div>
+    <canvas class="sparkline-container"></canvas>
+  </div>
+  <div class="down-card" data-type="topCategory">
+    <svg width="50" height="50"><circle cx="25" cy="25" r="20" stroke="#fff" stroke-width="3" fill="none"></circle></svg>
+    <div class="down-card-label">Top Category</div>
+    <div class="down-card-value">-</div>
+    <div class="down-card-bar"></div>
+    <canvas class="sparkline-container"></canvas>
+  </div>
+</section>
+
+<!-- Stats Compact -->
+<div class="stats-compact">
+  <div class="stats-card">Balance <span id="avgSpending">₦0</span></div>
+  <div class="stats-card">Income <span id="thisMonthSpending">₦0</span></div>
+  <div class="stats-card">Expenses <span id="topCategory">₦0</span></div>
+  <div class="stats-card">Top Category <span id="topCategoryName">-</span></div>
+</div>
+
+<!-- Chart -->
+<canvas id="spendingChart" height="200"></canvas>
+<select id="monthSelector" style="
+  display:block;
+  margin: 0 auto 15px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-weight: 600;
+">
+  <option value="all">All Months</option>
+</select>
+
+
+<!-- Insights -->
+<div id="spendingInsights">
+  <p>Track your spending pattern over the year. Your top spending categories this month:</p>
+  <ul id="topCategoriesList"></ul>
+</div>
+
+</body>
+</html>

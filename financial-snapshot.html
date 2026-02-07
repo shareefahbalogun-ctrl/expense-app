@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Financial Snapshot 💰</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* --- Down Dashboard Cards --- */
+    #downDashboard { display: flex; gap: 15px; margin-bottom: 20px; }
+    .down-card { flex: 1; background: #f5f5f5; border-radius: 10px; padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: relative; transition: transform 0.2s, box-shadow 0.2s; }
+    .down-card:hover { transform: scale(1.03); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .down-card-label { font-weight: bold; margin-bottom: 8px; }
+    .down-card-value { font-size: 20px; font-weight: bold; margin-bottom: 10px; }
+    .down-card-bar { width: 100%; height: 10px; background: #ddd; border-radius: 5px; overflow: hidden; }
+    .down-card-bar-inner { width: 0%; height: 100%; transition: width 1s ease; }
+
+    /* --- Mini Charts Styles --- */
+    .miniChartsContainer { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px; }
+    .miniChart { flex: 1 1 120px; height: 120px; background: #f5f5f5; border-radius: 10px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; position: relative;
+      transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s; }
+    .miniChart:hover { transform: scale(1.05); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .miniChart.selected { background-color: #d0e6ff; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    .miniChart p { margin: 5px 0 0; font-size: 14px; font-weight: bold; text-align: center; text-transform: capitalize; }
+    .miniChartBar { width: 100%; height: 10px; background: #ddd; border-radius: 5px; margin-top: 8px; overflow: hidden; }
+    .miniChartBarInner { height: 100%; width: 0%; background: #1982c4; transition: width 1s ease; }
+    .miniTooltip { position: absolute; bottom: 110%; background: #000; color: #fff; padding: 4px 8px; border-radius: 5px; font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .miniChart:hover .miniTooltip { opacity: 1; }
+    .resetFilterBtn { margin-top: 15px; padding: 6px 12px; background-color: #1982c4; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
+    /* Currency Selector Styles */
+    #currencySelector { margin: 10px 0; font-weight: bold; }
+    #currencyDropdown { padding: 4px 8px; border-radius: 4px; border: 1px solid #ccc; }
+  </style>
+</head>
+
+<body>
+<header>
+  <h1>Financial Snapshot 💰</h1>
+
+  <!-- Currency Selector -->
+  <div id="currencySelector">
+    Currency:
+    <select id="currencyDropdown">
+  <option value="NGN">₦ (Naira)</option>
+  <option value="USD">$ (Dollar)</option>
+  <option value="EUR">€ (Euro)</option>
+  <option value="GBP">£ (Pound)</option>
+  <option value="QAR">ر.ق (Qatari Riyal)</option>
+  <option value="AED">د.إ (UAE Dirham)</option>
+  <option value="SAR">﷼ (Saudi Riyal)</option>
+  <option value="JPY">¥ (Yen)</option>
+  <option value="CHF">CHF (Swiss Franc)</option>
+  <option value="CAD">$ (Canadian Dollar)</option>
+  <option value="AUD">$ (Australian Dollar)</option>
+  <option value="CNY">¥ (Chinese Yuan)</option>
+  <option value="INR">₹ (Rupee)</option>
+  <option value="BRL">R$ (Brazilian Real)</option>
+  <option value="ZAR">R (Rand)</option>
+  <option value="EGP">£ (Egyptian Pound)</option>
+  <option value="KES">KSh (Kenyan Shilling)</option>
+    </select>
+  </div>
+</header>
+
+<main>
+  <!-- Down Dashboard -->
+  <section id="downDashboard">
+    <div class="down-card">
+      <div class="down-card-label"></div>
+      <div class="down-card-value"></div>
+      <div class="down-card-bar"><div class="down-card-bar-inner"></div></div>
+    </div>
+    <div class="down-card">
+      <div class="down-card-label"></div>
+      <div class="down-card-value"></div>
+      <div class="down-card-bar"><div class="down-card-bar-inner"></div></div>
+    </div>
+    <div class="down-card">
+      <div class="down-card-label"></div>
+      <div class="down-card-value"></div>
+      <div class="down-card-bar"><div class="down-card-bar-inner"></div></div>
+    </div>
+    <div class="down-card">
+      <div class="down-card-label"></div>
+      <div class="down-card-value"></div>
+      <div class="down-card-bar"><div class="down-card-bar-inner"></div></div>
+    </div>
+  </section>
+
+  <!-- Financial Snapshot Chart -->
+  <section>
+    <p><strong>Total Balance:</strong> <span id="snapshotTotalBalance">₦0</span></p>
+    <p><strong>Total Income:</strong> <span id="snapshotTotalIncome">₦0</span></p>
+    <p><strong>Total Expenses:</strong> <span id="snapshotTotalExpenses">₦0</span></p>
+    <p><strong>Remaining Budget:</strong> <span id="snapshotRemainingBudget">₦0</span></p>
+    <p><strong>Top Category:</strong> <span id="snapshotTopCategory">-</span></p>
+    <button class="resetFilterBtn" id="resetFilterBtn" style="display:none;">Show All</button>
+
+    <canvas id="snapshotCategoryChart" height="200"></canvas>
+    <div class="miniChartsContainer" id="miniChartsContainer"></div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="app.js"></script>
+<script src="dashboard.js"></script>
+<script>
+  // === INIT DASHBOARD & CURRENCY DROPDOWN ===
+  document.addEventListener("DOMContentLoaded", () => {
+    if (typeof initCurrencyDropdown === "function") initCurrencyDropdown("currencyDropdown");
+    if (typeof updateAllDashboards === "function") updateAllDashboards();
+  });
+</script>
+</body>
+</html>

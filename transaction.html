@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transaction History</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Transaction History</h2>
+
+<!-- CURRENCY SELECTOR -->
+<div id="currencySelectorContainer" style="margin-bottom:20px;">
+  <label for="currencySelector">Currency: </label>
+  <select id="currencySelector"></select>
+</div>
+
+<!-- PAGE TRANSACTION CONTROLS -->
+<div id="pageTransactionControls">
+  <input type="text" id="pageSearchInput" placeholder="Search description or category">
+  <select id="pageTypeFilter">
+    <option value="all">All Types</option>
+    <option value="income">Income</option>
+    <option value="expense">Expense</option>
+  </select>
+</div>
+
+<!-- Transaction List -->
+<div id="pageTransactionHistoryFeedContainer">
+  <!-- Transactions dynamically inserted here -->
+</div>
+
+<!-- Pagination -->
+<div id="pagePaginationControls">
+  <button id="pagePrevPageBtn">Previous</button>
+  <span id="pageCurrentPage">1</span>
+  <button id="pageNextPageBtn">Next</button>
+</div>
+
+<!-- Back to Dashboard -->
+<button id="backToDashboardBtn">Back to Dashboard</button>
+
+<!-- ====== EDIT MODAL ====== -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <h3>Edit Transaction</h3>
+    <input type="text" id="editDescription" placeholder="Description">
+    <input type="text" id="editAmount" placeholder="₦0">
+    <select id="editType">
+      <option value="income">Income</option>
+      <option value="expense">Expense</option>
+    </select>
+    <div class="modal-actions">
+      <button id="saveEditBtn">Save</button>
+      <button id="cancelEditBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD TRANSACTION PANEL -->
+<!-- DASHBOARD TRANSACTION PANEL -->
+<div id="dashboardTransactionFeedPanel" class="hidden">
+  <!-- Close button -->
+  <button id="closeDashboardTransactionFeedBtn">&times;</button>
+
+  <!-- Top Notification for Dashboard Transactions -->
+  <div id="dashboardTxnNotification" class="notification hidden"></div>
+
+  <h2>Dashboard Transactions</h2>
+
+  <!-- Total Balance -->
+  <div id="dashboardBalanceSummary">
+    <div>Total Balance</div>
+    <div id="dashboardTotalBalance">₦0</div>
+  </div>
+
+  <!-- Controls -->
+  <div id="dashboardTransactionControls">
+    <input type="text" id="dashboardSearchInput" placeholder="Search description or category">
+    <select id="dashboardTypeFilter">
+      <option value="all">All Types</option>
+      <option value="income">Income</option>
+      <option value="expense">Expense</option>
+    </select>
+  </div>
+
+  <!-- Transaction Table -->
+  <div id="dashboardTransactionTableWrapper">
+    <table id="dashboardTransactionHistoryFeedContainer">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Amount</th>
+          <th>Type</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Transactions inserted dynamically -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div id="dashboardPaginationControls">
+    <button id="dashboardPrevPageBtn">Previous</button>
+    <span id="dashboardCurrentPage">1</span>
+    <button id="dashboardNextPageBtn">Next</button>
+  </div>
+</div>
+
+
+<!-- Toggle Dashboard Transactions Button -->
+<button id="toggleDashboardTxnsBtn">Transactions</button>
+
+<script src="transaction.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const currencySelector = document.getElementById("currencySelector");
+
+  // 1️⃣ Define currency symbols (can expand easily)
+  const currencyMap = {
+    NGN: "₦", USD: "$", EUR: "€", GBP: "£", JPY: "¥",
+    CAD: "$", AUD: "$", CHF: "CHF", CNY: "¥", INR: "₹",
+    BRL: "R$", ZAR: "R", EGP: "£", KES: "KSh", AED: "د.إ",
+    SAR: "﷼", QAR: "ر.ق"
+  };
+
+  // 2️⃣ Dynamically populate dropdown
+  currencySelector.innerHTML = "";
+  Object.entries(currencyMap).forEach(([code, symbol]) => {
+    const option = document.createElement("option");
+    option.value = code;
+    option.textContent = `${symbol} (${code})`;
+    currencySelector.appendChild(option);
+  });
+
+  // 3️⃣ Load saved currency from localStorage
+  const settings = JSON.parse(localStorage.getItem("settings")) || {};
+  const currentCurrencyCode = settings.currencyCode || "NGN";
+  currencySelector.value = currentCurrencyCode;
+
+  // 4️⃣ Update placeholders for edit/add amount fields
+  const updatePlaceholders = () => {
+    const editAmountInput = document.getElementById("editAmount");
+    const addAmountInput = document.getElementById("addAmount");
+    const symbol = currencyMap[currencySelector.value] || "₦";
+    if (editAmountInput) editAmountInput.placeholder = symbol + "0";
+    if (addAmountInput) addAmountInput.placeholder = symbol + "0";
+  };
+  updatePlaceholders();
+
+  // 5️⃣ Listen for currency changes
+  currencySelector.addEventListener("change", () => {
+    const newCurrencyCode = currencySelector.value;
+    // Save selected currency
+    localStorage.setItem("settings", JSON.stringify({ ...settings, currencyCode: newCurrencyCode }));
+    updatePlaceholders();
+    // Notify your transaction.js to update all amounts
+    document.dispatchEvent(new CustomEvent("currencyChanged", { detail: { newCurrencyCode } }));
+  });
+
+  // 6️⃣ Optional: Auto-populate currencies from transaction.js rates
+  if (window.CURRENCY_RATES) {
+    Object.keys(window.CURRENCY_RATES).forEach(code => {
+      if (!currencyMap[code]) {
+        const option = document.createElement("option");
+        option.value = code;
+        option.textContent = `${code} (${code})`; // fallback symbol
+        currencySelector.appendChild(option);
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weekly Goals 🏆</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* Progress Circles */
+.progress-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  margin: 20px auto;
+  background: conic-gradient(#dce0e6 0deg 360deg);
+  transition: background 0.3s ease;
+}
+
+/* Responsive scaling for circles */
+@media(max-width: 768px) {
+  .progress-circle {
+    width: 100px;
+    height: 100px;
+    font-size: 16px;
+  }
+}
+@media(max-width: 480px) {
+  .progress-circle {
+    width: 90px;
+    height: 90px;
+    font-size: 14px;
+  }
+}
+
+/* ---------------- Lists ---------------- */
+#weeklyGoalsList, #behaviorGoalsList {
+  list-style: none;
+  padding-left: 0;
+  text-align: left;
+  max-width: 400px;
+  margin: 0 auto 20px auto;
+}
+
+#weeklyGoalsList li, #behaviorGoalsList li {
+  margin-bottom: 10px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Checkboxes */
+#behaviorGoalsList input[type="checkbox"] {
+  margin-right: 8px;
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+/* Individual Goal Progress */
+.goal-progress {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: bold;
+  min-width: 40px;
+  text-align: right;
+}
+
+/* ---------------- Sections ---------------- */
+#behaviorGoalsSection, #overallGoalsSection {
+  margin-top: 30px;
+  text-align: center;
+}
+
+#behaviorGoalsSection h3, #overallGoalsSection h3 {
+  margin-bottom: 15px;
+}
+
+#overallMsg {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* ---------------- Dashboard Cards ---------------- */
+.dashboard-middle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 25px;
+  justify-content: center;
+}
+
+.dashboard-middle .card {
+  flex: 1 1 calc(33% - 10px);
+  min-width: 120px;
+  text-align: center;
+  padding: 15px;
+  border-radius: 12px;
+  background: #f5f5f5;
+  text-decoration: none;
+  color: inherit;
+  transition: 0.2s;
+}
+
+.dashboard-middle .card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+
+.card-icon {
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+/* ---------------- Reset Button ---------------- */
+#resetWeekBtn {
+  margin-top:10px;
+  padding:8px 12px;
+  font-size:14px;
+  cursor:pointer;
+  border-radius:6px;
+  border:1px solid #ccc;
+  background:#f5f5f5;
+  transition:0.2s;
+}
+
+#resetWeekBtn:hover {
+  background:#e0e0e0;
+}
+
+/* ---------------- Responsive Cards ---------------- */
+@media(max-width: 768px) {
+  .dashboard-middle .card {
+    flex: 1 1 calc(50% - 10px);
+  }
+}
+@media(max-width: 480px) {
+  .dashboard-middle .card {
+    flex: 1 1 100%;
+  }
+}
+
+/* ---------------- Toasts ---------------- */
+#toastContainer {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.toast {
+  min-width: 250px;
+  padding: 12px 18px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  opacity: 0;
+  transform: translateY(-50px);
+  transition: all 0.5s ease;
+  position: relative;
+}
+
+.toast.success { background-color: #4caf50; }
+.toast.warning { background-color: #ffc107; color: #000; }
+.toast.error   { background-color: #dc3545; }
+
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.hide { opacity: 0; transform: translateY(-50px); }
+
+.toast .close-btn {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Weekly Goals 🏆</h1>
+    <button id="resetWeekBtn">🔄 Reset Week</button>
+  </header>
+
+  <main>
+    <section class="section dashboard-middle" id="dashboardMiddle">
+      <a href="financial-snapshot.html" class="card clickable">
+        <div class="card-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 7H3V19H21V7Z"></path>
+            <path d="M21 7L12 13L3 7"></path>
+          </svg>
+        </div>
+        <div class="card-label">Financial Snapshot</div>
+      </a>
+
+      <a href="budget-alerts.html" class="card clickable">
+        <div class="card-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a1 1 0 0 0 .86 1.5H21.32a1 1 0 0 0 .86-1.5L13.71 3.86a1 1 0 0 0-1.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12" y2="17"></line>
+          </svg>
+        </div>
+        <div class="card-label">Budget Alerts</div>
+      </a>
+
+      <a href="weekly-goals.html" class="card clickable">
+        <div class="card-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 21h8M12 17v4M5 3h14v4a7 7 0 0 1-14 0V3Z"></path>
+          </svg>
+        </div>
+        <div class="card-label">Weekly Goals</div>
+      </a>
+
+      <a href="upcoming-payments.html" class="card clickable">
+        <div class="card-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2196F3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </div>
+        <div class="card-label">Upcoming Payments</div>
+      </a>
+
+      <a href="top-categories.html" class="card clickable">
+        <div class="card-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="20" x2="12" y2="10"></line>
+            <line x1="18" y1="20" x2="18" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="16"></line>
+          </svg>
+        </div>
+        <div class="card-label">Top Categories</div>
+      </a>
+
+      <a href="achievements.html" class="card clickable">
+        <div class="card-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#9C27B0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="7"></circle>
+            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+          </svg>
+        </div>
+        <div class="card-label">Achievements</div>
+      </a>
+    </section>
+
+
+    <!-- Weekly Spending Section -->
+    <section id="weeklyGoalsSection">
+      <p>Weekly spending limit usage:</p>
+      <div class="progress-circle" data-current="0">0%</div>
+      <ul id="weeklyGoalsList"></ul>
+      <p id="celebrationMsg" style="font-weight: bold;"></p>
+    </section>
+
+    <!-- Behavior Goals Section -->
+    <section id="behaviorGoalsSection">
+      <h3>Behavior Goals</h3>
+      <ul id="behaviorGoalsList">
+        <li>
+          <label>
+            <input type="checkbox" data-goal="log-expenses">
+            Log expenses every day 📅
+          </label>
+          <span class="goal-progress" data-goal="log-expenses">0%</span>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" data-goal="no-impulse">
+            Avoid impulse purchases 🛑
+          </label>
+          <span class="goal-progress" data-goal="no-impulse">0%</span>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" data-goal="food-budget">
+            Stay within food budget 🍽️
+          </label>
+          <span class="goal-progress" data-goal="food-budget">0%</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Overall Weekly Score Section -->
+    <section id="overallGoalsSection">
+      <h3>Overall Weekly Score</h3>
+      <div id="overallProgress" class="progress-circle" data-current="0">0%</div>
+      <p id="overallMsg"></p>
+    </section>
+  </main>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

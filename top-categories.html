@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Top Categories 📊</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  #topCategoriesSection { margin-top: 20px; }
+  #topCategoriesList li { margin-bottom: 10px; font-weight: bold; }
+  .mini-bar-wrapper { height: 20px; background: #ddd; margin-bottom: 10px; position: relative; border-radius: 5px; overflow: hidden; }
+  .mini-bar { height: 100%; text-align: right; padding-right: 5px; font-weight: bold; color: #fff; line-height: 20px; transition: width 1.5s ease; background: #1982c4; }
+  canvas { max-width: 100%; height: 300px; margin-top: 20px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Top Categories 📊</h1>
+  </header>
+
+  <main>
+    <div class="summary-cards">
+      <div class="summary-card">
+        <h4>Total Expenses</h4>
+        <p id="totalExpenses">₦0</p>
+      </div>
+    </div>
+
+    <section id="topCategoriesSection">
+      <ul id="topCategoriesList"></ul>
+      <canvas id="topCategoryChart"></canvas>
+      <div id="topCategoriesCharts"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="dashboard.js"></script>
+  <script>
+    const currency = window.selectedCurrency || "₦";
+
+    // --- Get transactions
+    const txns = getTransactions().filter(t => t.user === getActiveUser() && t.type === "expense");
+
+    // --- Ensure main categories exist
+    const mainCategories = ["Food", "Transportation", "Entertainment", "Utilities", "Rent"];
+    const categoryTotalsRaw = {};
+    mainCategories.forEach(cat => categoryTotalsRaw[cat] = 0);
+
+    // --- Sum transactions per category
+    txns.forEach(t => {
+      const cat = normalizeCategory(t.category);
+      categoryTotalsRaw[cat] = (categoryTotalsRaw[cat] || 0) + Number(t.amount);
+    });
+
+    // --- Convert totals
+    const categoryTotals = {};
+    Object.entries(categoryTotalsRaw).forEach(([cat, amt]) => {
+      categoryTotals[cat] = convertAmount(amt);
+    });
+
+    // --- Update total expenses
+    const totalExpenses = Object.values(categoryTotals).reduce((a,b) => a+b, 0);
+    document.getElementById("totalExpenses").textContent = currency + totalExpenses.toLocaleString();
+
+    // --- Sort top 5 categories
+    const sortedCats = Object.entries(categoryTotals)
+                             .sort((a,b) => b[1]-a[1])
+                             .slice(0,5);
+
+    // --- Update list with emojis
+    const categoryIcons = { Food:"🍔", Transportation:"🚌", Utilities:"💡", Entertainment:"🎬", Rent:"🏠", default:"📊" };
+    const topCategoriesList = document.getElementById("topCategoriesList");
+    topCategoriesList.innerHTML = sortedCats.map(([cat, amt]) => {
+      const icon = categoryIcons[cat] || categoryIcons.default;
+      return `<li>${icon} ${cat}: ${currency}${amt.toLocaleString()}</li>`;
+    }).join("");
+
+    // --- Mini bars animation
+    const chartsContainer = document.getElementById("topCategoriesCharts");
+    chartsContainer.innerHTML = ""; // reset
+    const maxSpent = Math.max(...Object.values(categoryTotals), 1);
+    sortedCats.forEach(([cat, amt]) => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "mini-bar-wrapper";
+
+      const bar = document.createElement("div");
+      bar.className = "mini-bar";
+      bar.style.width = "0%";
+      bar.textContent = `${currency}${amt.toLocaleString()}`;
+
+      wrapper.appendChild(bar);
+      chartsContainer.appendChild(wrapper);
+
+      // Animate width
+      setTimeout(() => bar.style.width = Math.min((amt/maxSpent)*100, 100) + "%", 100);
+    });
+
+    // --- Chart.js bar chart with animated growth
+    const ctx = document.getElementById("topCategoryChart");
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: sortedCats.map(([cat]) => cat),
+        datasets: [{
+          label: "Expenses",
+          data: sortedCats.map(([_, amt]) => amt),
+          backgroundColor: "#1982c4",
+          borderRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => formatCurrency(ctx.raw) } },
+          datalabels: { // show labels above bars
+            anchor: 'end',
+            align: 'end',
+            color: '#000',
+            formatter: val => currency + Number(val).toLocaleString()
+          }
+        },
+        scales: { y: { beginAtZero: true } },
+        animation: { duration: 1500, easing: 'easeOutCubic' }
+      },
+      plugins: [ChartDataLabels] // make sure to include chartjs-plugin-datalabels
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+</body>
+</html>

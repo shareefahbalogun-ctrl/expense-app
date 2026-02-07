@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help / FAQ - Ultimate Expense Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f9f9f9;
+    color: #333;
+  }
+  header {
+    background: #1982c4;
+    color: #fff;
+    padding: 1rem 2rem;
+    text-align: center;
+  }
+  header h1 { margin: 0; font-size: 1.8rem; }
+  header p { margin: 0.2rem 0 0; font-size: 1rem; }
+
+  .faq-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  .faq-item {
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .faq-item:hover { transform: translateY(-2px); }
+  .faq-question {
+    font-weight: 600;
+    position: relative;
+    padding-right: 20px;
+  }
+  .faq-question::after {
+    content: '+';
+    position: absolute;
+    right: 0;
+    font-size: 1.2rem;
+    transition: transform 0.3s;
+  }
+  .faq-item.active .faq-question::after { transform: rotate(45deg); }
+  .faq-answer {
+    display: none;
+    margin-top: 0.5rem;
+    line-height: 1.5;
+    font-size: 0.95rem;
+  }
+  .faq-answer ul { padding-left: 1.2rem; }
+  .faq-answer img.screenshot {
+    width: 100%;
+    max-width: 400px;
+    margin-top: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  .tip {
+    background: #e7f3ff;
+    border-left: 4px solid #1982c4;
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    border-radius: 5px;
+  }
+  footer {
+    text-align: center;
+    padding: 1.5rem 0;
+    font-size: 0.9rem;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Help / FAQ</h1>
+  <p>Everything you need to know about using the Ultimate Expense Tracker</p>
+</header>
+
+<div class="faq-container">
+
+  <!-- Dashboard -->
+  <div class="faq-item">
+    <div class="faq-question">What is the Dashboard?</div>
+    <div class="faq-answer">
+      The Dashboard is your main overview of finances. It shows:
+      <ul>
+        <li>Total Balance</li>
+        <li>Total Income</li>
+        <li>Total Expenses</li>
+        <li>Monthly Budget and Remaining Budget</li>
+        <li>Quick links to Weekly Goals, Budget Alerts, and Financial Snapshot</li>
+      </ul>
+      <img src="img-screenshot.png" alt="Dashboard Screenshot" class="screenshot">
+      <div class="tip">Tip: You can quickly see if you are over budget by checking the remaining budget bar.</div>
+    </div>
+  </div>
+
+  <!-- Transactions -->
+  <div class="faq-item">
+    <div class="faq-question">How do I add Transactions?</div>
+    <div class="faq-answer">
+      You can add transactions via the sidebar or the "Add Transaction" button. Fill in:
+      <ul>
+        <li>Description</li>
+        <li>Amount</li>
+        <li>Category</li>
+        <li>Type (Income or Expense)</li>
+        <li>Optional Recurring settings</li>
+      </ul>
+      <img src="img-screenshot.png" alt="Add Transaction Screenshot" class="screenshot">
+      <div class="tip">Tip: Use recurring transactions for regular bills to save time.</div>
+    </div>
+  </div>
+
+  <!-- Analytics -->
+  <div class="faq-item">
+    <div class="faq-question">What are Analytics / Charts?</div>
+    <div class="faq-answer">
+      Analytics display visual charts of your finances:
+      <ul>
+        <li>Income vs Expenses</li>
+        <li>Category breakdown</li>
+        <li>Monthly budget progress</li>
+      </ul>
+      <img src="img-screenshot.png" alt="Analytics Screenshot" class="screenshot">
+      <div class="tip">Tip: Check charts weekly to track trends and adjust budgets.</div>
+    </div>
+  </div>
+
+  <!-- Down Cards -->
+  <div class="faq-item">
+    <div class="faq-question">What are the Down Cards (Spending Pattern, Trend Comparison, Insights)?</div>
+    <div class="faq-answer">
+      These sections provide deeper insights:
+      <ul>
+        <li><strong>Spending Pattern:</strong> Shows where your money goes</li>
+        <li><strong>Trend Comparison:</strong> Compare past and current expenses</li>
+        <li><strong>Insights:</strong> Tips based on your financial habits</li>
+        <li><strong>Cash Flow:</strong> Visualize income vs expenses over time</li>
+        <li><strong>Future Projection:</strong> Predict budget for upcoming months</li>
+      </ul>
+      <img src="img-screenshot.png" alt="Down Cards Screenshot" class="screenshot">
+      <div class="tip">Tip: Use the Future Projection card to plan your upcoming expenses effectively.</div>
+    </div>
+  </div>
+
+  <!-- Export / Import -->
+  <div class="faq-item">
+    <div class="faq-question">How do I Export or Import my data?</div>
+    <div class="faq-answer">
+      <strong>Export:</strong> Click "Export" to download a backup file.<br>
+      <strong>Import:</strong> Use the "Import" button to upload a previous backup.<br>
+      <ul>
+        <li>Always export before making major changes</li>
+        <li>Imported files must match the app format</li>
+        <li>Importing overwrites existing data</li>
+      </ul>
+      <img src="img-screenshot.png" alt="Export Screenshot" class="screenshot">
+      <div class="tip">Tip: Keep a monthly backup to avoid data loss.</div>
+    </div>
+  </div>
+
+  <!-- Notifications -->
+  <div class="faq-item">
+    <div class="faq-question">How do Notifications work?</div>
+    <div class="faq-answer">
+      The app can notify you about:
+      <ul>
+        <li><strong>Transaction Reminders:</strong> Reminds you to log transactions</li>
+        <li><strong>Budget Alerts:</strong> Warns when you approach or exceed your budget</li>
+        <li><strong>Income Alerts:</strong> Notifies when new income is added</li>
+      </ul>
+      <img src="img-screenshot.png" alt="Notifications Screenshot" class="screenshot">
+      <div class="tip">Tip: Enable only notifications you need to avoid clutter.</div>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="faq-item">
+    <div class="faq-question">How do I customize Settings?</div>
+    <div class="faq-answer">
+      Settings let you adjust:
+      <ul>
+        <li>Appearance: Dark Mode, Font Size, Confetti</li>
+        <li>Currency & Date Format</li>
+        <li>Notifications: Enable/disable reminders and alerts</li>
+        <li>Budget & Savings Goals</li>
+        <li>Security: App PIN, Biometric login, 2FA</li>
+      </ul>
+      <img src="img-screenshot.png" alt="Settings Screenshot" class="screenshot">
+      <div class="tip">Tip: Remember to click "Save Settings" after making changes.</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  &copy; 2026 Ultimate Expense Tracker. All rights reserved.
+</footer>
+
+<script>
+  // Toggle FAQ answers
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.toggle('active');
+      const answer = item.querySelector('.faq-answer');
+      answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+    });
+  });
+</script>
+
+</body>
+</html>

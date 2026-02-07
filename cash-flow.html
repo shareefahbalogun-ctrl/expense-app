@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cash Flow Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; color: #333; }
+  h1 { text-align: center; margin-bottom: 20px; color: #2196F3; }
+
+  #downDashboard { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; margin-bottom: 30px; }
+  .down-card { background: #fff; border-radius: 12px; padding: 15px; width: 150px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .down-card svg { transform: rotate(-90deg); margin-bottom: 10px; }
+  .down-card circle { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+  .bg-circle { stroke: #eee; }
+  .progress-circle { stroke: #2196F3; stroke-dasharray: 125.6; stroke-dashoffset: 125.6; }
+  .down-card-label { font-weight: bold; margin-bottom: 5px; color: #555; }
+  .down-card-value { font-size: 1.2em; color: #000; margin-bottom: 10px; }
+
+  .stats { display: flex; justify-content: space-around; margin-bottom: 20px; flex-wrap: wrap; }
+  .stats div { background: #fff; padding: 10px 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); min-width: 150px; text-align: center; margin-bottom: 10px; }
+
+  canvas { background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; }
+
+  #cashFlowInsights { text-align: center; font-style: italic; color: #666; margin-bottom: 30px; }
+</style>
+</head>
+<body>
+
+<h1>Cash Flow</h1>
+
+<!-- Dashboard Cards -->
+<section id="downDashboard">
+  <div class="down-card">
+    <svg width="50" height="50">
+      <circle class="bg-circle" cx="25" cy="25" r="20"></circle>
+      <circle class="progress-circle" cx="25" cy="25" r="20"></circle>
+    </svg>
+    <div class="down-card-label">Balance</div>
+    <div class="down-card-value">₦0</div>
+  </div>
+  <div class="down-card">
+    <svg width="50" height="50">
+      <circle class="bg-circle" cx="25" cy="25" r="20"></circle>
+      <circle class="progress-circle" cx="25" cy="25" r="20"></circle>
+    </svg>
+    <div class="down-card-label">Income</div>
+    <div class="down-card-value">₦0</div>
+  </div>
+  <div class="down-card">
+    <svg width="50" height="50">
+      <circle class="bg-circle" cx="25" cy="25" r="20"></circle>
+      <circle class="progress-circle" cx="25" cy="25" r="20"></circle>
+    </svg>
+    <div class="down-card-label">Expenses</div>
+    <div class="down-card-value">₦0</div>
+  </div>
+  <div class="down-card">
+    <svg width="50" height="50">
+      <circle class="bg-circle" cx="25" cy="25" r="20"></circle>
+      <circle class="progress-circle" cx="25" cy="25" r="20"></circle>
+    </svg>
+    <div class="down-card-label">Top Category</div>
+    <div class="down-card-value">-</div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats">
+  <div>Total Income: <span id="totalIncome">₦0</span></div>
+  <div>Total Expenses: <span id="totalExpenses">₦0</span></div>
+  <div>Remaining Balance: <span id="remainingBalance">₦0</span></div>
+</div>
+
+<!-- Cash Flow Chart -->
+<canvas id="cashFlow" height="200"></canvas>
+<div id="cashFlowInsights">
+  <p>Visualize your income vs expenses at a glance.</p>
+</div>
+
+<!-- JS -->
+<script src="dashboard.js"></script>
+</body>
+</html>

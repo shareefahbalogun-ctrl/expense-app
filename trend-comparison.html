@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trend Comparison</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="app.js"></script>
+  <script src="dashboard.js"></script>
+
+  <style>
+    /* ===== Reset ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: "Segoe UI", Tahoma, sans-serif; background: #0f172a; color: #e5e7eb; padding: 20px; }
+    h1 { text-align: center; margin-bottom: 25px; font-size: 1.8rem; color: #ffffff; }
+
+    /* ===== Dashboard Cards ===== */
+    .down-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 25px; }
+    .down-card { background: #1e293b; border-radius: 14px; padding: 18px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.35); transition: transform 0.2s ease, box-shadow 0.2s ease; position: relative; }
+    .down-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.45); }
+    .down-card svg { margin-bottom: 10px; }
+    .down-card svg circle { stroke: #ffffff; }
+    .down-card-label { font-size: 0.85rem; color: #94a3b8; margin-bottom: 6px; }
+    .down-card-value { font-size: 1.2rem; font-weight: bold; color: #ffffff; }
+    .trend-arrow { font-size: 0.8rem; margin-left: 4px; }
+    .up { color: #22c55e; }
+    .down { color: #ef4444; }
+    .down-card-bar { margin-top: 12px; height: 6px; width: 100%; background: #334155; border-radius: 10px; overflow: hidden; }
+    .down-card-bar-inner { height: 100%; width: 0%; border-radius: 10px; transition: width 0.8s ease; }
+
+    /* ===== Stats ===== */
+    .stats { display: flex; justify-content: space-between; gap: 12px; background: #1e293b; padding: 16px; border-radius: 14px; margin-bottom: 25px; flex-wrap: wrap; }
+    .stats div { font-size: 0.9rem; color: #cbd5f5; }
+    .stats span { font-weight: bold; color: #ffffff; }
+
+    /* ===== Charts ===== */
+    canvas { background: #1e293b; padding: 15px; border-radius: 14px; box-shadow: 0 8px 20px rgba(0,0,0,0.35); margin-bottom: 20px; }
+
+    /* ===== Insights ===== */
+    #trendInsights { background: #020617; border-left: 4px solid #38bdf8; padding: 14px 16px; border-radius: 10px; font-size: 0.9rem; color: #cbd5f5; margin-bottom: 20px; }
+    #trendInsights .up { color: #22c55e; font-weight: bold; }
+    #trendInsights .down { color: #ef4444; font-weight: bold; }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 600px){ .down-dashboard { grid-template-columns: 1fr 1fr; } .stats { flex-direction: column; gap: 8px; } }
+  </style>
+</head>
+
+<body>
+
+  <h1>Trend Comparison</h1>
+
+  <!-- ===== Dashboard Cards ===== -->
+  <section id="downDashboard" class="down-dashboard">
+    <div class="down-card">
+      <svg width="50" height="50"><circle cx="25" cy="25" r="20" stroke-width="3" fill="none"></circle></svg>
+      <div class="down-card-label">Balance</div>
+      <div class="down-card-value">₦0 <span class="trend-arrow up">↑</span></div>
+      <div class="down-card-bar"><div class="down-card-bar-inner" style="background:#FFD700;"></div></div>
+    </div>
+
+    <div class="down-card">
+      <svg width="50" height="50"><circle cx="25" cy="25" r="20" stroke-width="3" fill="none"></circle></svg>
+      <div class="down-card-label">Income</div>
+      <div class="down-card-value">₦0 <span class="trend-arrow down">↓</span></div>
+      <div class="down-card-bar"><div class="down-card-bar-inner" style="background:#4CAF50;"></div></div>
+    </div>
+
+    <div class="down-card">
+      <svg width="50" height="50"><circle cx="25" cy="25" r="20" stroke-width="3" fill="none"></circle></svg>
+      <div class="down-card-label">Expenses</div>
+      <div class="down-card-value">₦0 <span class="trend-arrow up">↑</span></div>
+      <div class="down-card-bar"><div class="down-card-bar-inner" style="background:#FF6B6B;"></div></div>
+    </div>
+
+    <div class="down-card">
+      <svg width="50" height="50"><circle cx="25" cy="25" r="20" stroke-width="3" fill="none"></circle></svg>
+      <div class="down-card-label">Top Category</div>
+      <div class="down-card-value">-</div>
+      <div class="down-card-bar"><div class="down-card-bar-inner" style="background:#2196F3;"></div></div>
+    </div>
+  </section>
+
+  <!-- ===== Stats ===== -->
+  <div class="stats">
+    <div>This Month: <span id="thisMonth">₦0</span></div>
+    <div>Average: <span id="avgMonth">₦0</span></div>
+    <div>Difference: <span id="diff">0%</span></div>
+  </div>
+
+  <!-- ===== Trend Comparison Chart ===== -->
+  <canvas id="trendChart" height="200"></canvas>
+
+  <!-- ===== Top Category Chart ===== -->
+  <canvas id="topCategoryChart" height="200"></canvas>
+
+  <!-- ===== Insights ===== -->
+  <div id="trendInsights">
+    <p>Compare this month's spending with your average monthly trend.</p>
+    <p>Balance is <span class="up">up 12%</span> from last month.</p>
+    <p>Expenses are <span class="down">down 5%</span>, good job!</p>
+  </div>
+
+</body>
+</html>
